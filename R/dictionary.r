@@ -10,7 +10,7 @@ loadDictionaries <- function() {
 combineDictionaries <- function() {
     both <- retrieveDictionary("current")
     if (exists("non_standard", envir=globals))
-        both <- rbind.fill(both, retrieveDictionary("useful"))
+        both <- rbind.fill(both, retrieveDictionary("non-standard"))
     assign("both", both, globals)
 }
 
