@@ -3,13 +3,14 @@ loadDictionaries <- function() {
     assign("globals", new.env(), envir=parent.env(environment()))
     for (file in list.files(path, "rdata$", full.names=T))
         load(file, globals)
-    #combineDictionaries()
+    combineDictionaries()
 }
+#MH - Re-added section for both replacing "useful" with "non-standard"
 
 combineDictionaries <- function() {
     both <- retrieveDictionary("current")
-    #if (exists("useful", envir=globals))
-    #    both <- rbind.fill(both, retrieveDictionary("useful"))
+    if (exists("non_standard", envir=globals))
+        both <- rbind.fill(both, retrieveDictionary("useful"))
     assign("both", both, globals)
 }
 
@@ -20,10 +21,12 @@ retrieveDictionary <- function(name) {
         stop("dictionary '", name, "' does not exist")
 }
 
+#MH - Re-added if "non_standard" exists combine dictionaries
+
 saveDictionary <- function(name, dictionary) {
     assign(name, dictionary, globals)
-    #if (name == "current" || name == "useful")
-    #    combineDictionaries()
+    if (name == "current" || name == "non_standard")
+        combineDictionaries()
     
     path <- file.path(system.file(package="alspac"), "data")
     if (!file.exists(path))
@@ -73,9 +76,11 @@ dictionaryGood <- function(dictionary, max.print=10) {
 #' Update the variable dictionaries for the ALSPAC dataset.
 #' 
 #' @export
+#' 
+#' MH - Create dictionary for files in Waiting room
 updateDictionaries <- function() {
     createDictionary("Current", name="current", quick=F)
-    #createDictionary("Useful_data", name="useful", quick=F)
+    createDictionary("../DataBuddy/DataRequests/Waiting Room", name="non_standard", quick=F)
     return(T)
 }
 
@@ -94,8 +99,11 @@ updateDictionaries <- function() {
 #' 
 #' @export
 #' @return Data frame dictionary listing available variables.
+#' 
+#' 
+#' MH - adding in "Waiting room" required to build dictionary
 createDictionary <- function(datadir="Current", name=NULL, quick=F) {
-    stopifnot(datadir == "Current")
+    stopifnot(datadir %in% c("Current","../DataBuddy/DataRequests/Waiting Room")
     
     alspacdir <- options()$alspac_data_dir
     datadir <- file.path(alspacdir, datadir)
