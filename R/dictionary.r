@@ -103,8 +103,7 @@ updateDictionaries <- function() {
 #' 
 #' MH - adding in "Waiting room" required to build dictionary
 createDictionary <- function(datadir="Current", name=NULL, quick=F) {
-    stopifnot(datadir %in% c("Current","../DataBuddy/DataRequests/Waiting Room")
-    
+    stopifnot(datadir %in% c("Current","../DataBuddy/DataRequests/Waiting Room"))
     alspacdir <- options()$alspac_data_dir
     datadir <- file.path(alspacdir, datadir)
     files <- list.files(datadir,  
