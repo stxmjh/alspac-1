@@ -32,6 +32,7 @@ getDefaultDataDir <- function()
 #' \item{Windows: R:/Data/}
 #' \item{Mac: /Volumes/data/}
 #' \item{Linux: ~/.gvfs/data/}
+#' \item{Windows: R:/DataBuddy/DataRequests/Waiting Room}
 #' }
 #' 
 #' @param datadir The directory where the ALSPAC data can be found
@@ -48,14 +49,15 @@ setDataDir <- function(datadir=getDefaultDataDir())
     options(alspac_data_dir=path.expand(datadir))
 }
 
+#Check waiting room is two up
 checkDataDir <- function(datadir) {
     test <- file.exists(datadir)
     if(test) {
-        if(all(file.exists(paste0(datadir, c("/Syntax", "/Current")))))
+        if(all(file.exists(paste0(datadir, c("/Syntax", "/Current", "/../DataBuddy/DataRequests/Waiting Room")))))
             TRUE
         else {
             stop("The specified data directory exists but it is not the correct directory. ",
-                 "It should have the directories 'Syntax' and 'Current' contained within. ",
+                 "It should have the directories 'Syntax', 'Current' and 'Waiting Room' contained within. ",
                  "It is normally located on the remote R drive, R:/Data/")
         }
     } else {
