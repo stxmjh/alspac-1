@@ -98,6 +98,11 @@ addSourcesToDictionary <- function(dictionary) {
     }
 
     sources <- read.csv(system.file("data", "sources.csv", package = "alspac"), stringsAsFactors=F)
+#Add line for second non-standard sources file NOTE: this should live in restriced data access drive e.g (R/DataBuddy/DataRequests/Waiting Room)
+    sources2 <-read.csv(system.file("data", "sources2.csv", package = "alspac"), stringsAsFactors=F)
+    
+    sources <- rbind(sources, sources2)
+    
     stopifnot(all(names(keep) %in% colnames(sources)))
 
     ## match 'sources' to 'dictionary' using the 'obj' column
