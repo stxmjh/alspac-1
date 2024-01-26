@@ -28,6 +28,7 @@
 #' ## in the current directory
 #' }
 #' @export
+#' MH - change line 43 dictionary = "current"     to "both"
 extractDataset <- function(variable_file, cid_file,
                            b_number="BXXXX", author="Author",
                            output_format="sav",
@@ -39,7 +40,7 @@ extractDataset <- function(variable_file, cid_file,
                                    b_number, "_",
                                    format(Sys.time(), "%d%b%y"),
                                    ".", output_format)),
-                           dictionary="current") {
+                           dictionary="both") {
     if (!dir.exists(output_path))
         stop("Path in 'output_path' does not exist: ", output_path)
   
