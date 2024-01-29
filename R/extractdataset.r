@@ -107,7 +107,8 @@ extractDataset <- function(variable_file, cid_file,
 
     dat <- dat[order(dat[[new_column]]),]
 
-    attributes(dat$cidB0001)$label <- paste0(
+#Replace hard coded 'cidB0001' with first column position [[1]]
+    attributes(dat[[1]])$label <- paste0(
         "Unique pregnancy identifier for ",
         author,
         " (", sub("\\.[^.]+$", "", basename(cid_file)), ")")
