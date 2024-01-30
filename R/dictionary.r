@@ -84,6 +84,11 @@ updateDictionaries <- function() {
     return(T)
 }
 
+#' MH - Add seperate function to only create dictionary for files in Waiting room
+updateDictionaries2 <- function() {
+  createDictionary("../DataBuddy/DataRequests/Waiting Room", name="non_standard", quick=F)
+  return(T)
+}
 
 #' Create a dictionary from ALSPAC STATA files
 #'
@@ -136,6 +141,64 @@ createDictionary <- function(datadir="Current", name=NULL, quick=F) {
     
     invisible(dictionary)
 }
+
+#' createDictionary2
+#' Create a second dictionary from ALSPAC STATA files for non-standard data in Waiting Room only
+#'
+#' @param datadir ALSPAC data subdirectory from which to create the index
+#' (Default: "Current"). .
+#' @param name If not \code{NULL}, then the resulting dictionary
+#' will be saved to a file in the R package for use next time the package
+#' is loaded. The dictionary will be available with the given name (Default: NULL).
+#'
+#' The function uses multiple processors using \code{\link{mclapply}()}.
+#' Use multiple processors by setting \code{mc.cores} option using
+#' \code{options()}.
+#' 
+#' @export
+#' @return Data frame dictionary listing available variables.
+#' 
+#' 
+#' 
+createDictionary2 <- function(datadir="Current", name=NULL, quick=F) {
+  stopifnot(datadir %in% c("../DataBuddy/DataRequests/Waiting Room"))
+  alspacdir <- options()$alspac_data_dir
+  datadir <- file.path(alspacdir, datadir)
+  files <- list.files(datadir,  
+                      pattern="dta$",
+                      full.names=T,
+                      recursive=T,
+                      ignore.case=T)
+  
+  dictionary <- mclapply(files, function(file) {
+    cat(date(), "loading", file, "\n")
+    tryCatch({
+      merge(
+        alspac:::processDTA(file, quick),
+        alspac:::createFileTable(file, alspacdir), by = "obj")
+    }, error=function(e) {
+      warning("Error loading", file, "\n")
+      print(e)
+      NULL
+    })
+  }) %>% bind_rows
+  
+  dictionary <- dictionary[which(dictionary$counts > 0),]
+  
+  ## add data sources information so that withdrawn consent can be 
+  ## handled correctly for each variable
+  dictionary <- addSourcesToDictionary(dictionary)
+  
+  if (!is.null(name))
+    saveDictionary(name, dictionary)
+  
+  invisible(dictionary)
+}
+#
+
+
+
+
 
 countCharOccurrences <- function(char, s)
 {
