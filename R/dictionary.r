@@ -84,9 +84,16 @@ updateDictionaries <- function() {
     return(T)
 }
 
+#' Update dictionaries 2
+#'
+#' Update the variable dictionaries for the ALSPAC dataset.
+#' 
+#' @export
+#' 
+#' MH - Create dictionary for files in Waiting room
 #' MH - Add seperate function to only create dictionary for files in Waiting room
 updateDictionaries2 <- function() {
-  createDictionary("../DataBuddy/DataRequests/Waiting Room", name="non_standard", quick=F)
+  createDictionary2("../DataBuddy/DataRequests/Waiting Room", name="non_standard", quick=F)
   return(T)
 }
 
